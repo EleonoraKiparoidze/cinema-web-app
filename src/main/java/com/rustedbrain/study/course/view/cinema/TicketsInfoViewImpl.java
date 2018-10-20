@@ -26,9 +26,6 @@ import java.util.List;
 @SpringView(name = VaadinUI.TICKET_INFO_VIEW)
 public class TicketsInfoViewImpl extends VerticalLayout implements TicketsInfoView {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 54340880029187075L;
 
 	private List<TicketsInfoView.TicketsInfoViewListener> viewListeners = new ArrayList<>();
@@ -45,7 +42,7 @@ public class TicketsInfoViewImpl extends VerticalLayout implements TicketsInfoVi
 	}
 
 	public Panel getTicketsInfoPanel() {
-		if (ticketsInfoPanel == null) {
+		if ( ticketsInfoPanel == null ) {
 			ticketsInfoPanel = new Panel();
 		}
 		return ticketsInfoPanel;
@@ -61,14 +58,14 @@ public class TicketsInfoViewImpl extends VerticalLayout implements TicketsInfoVi
 	@Override
 	public void showTicketsInfo(List<TicketInfo> ticketInfos) {
 		VerticalLayout ticketsVerticalLayout = new VerticalLayout();
-		if (!ticketInfos.isEmpty()) {
+		if ( !ticketInfos.isEmpty() ) {
 			for (TicketInfo ticketInfo : ticketInfos) {
 				Label movieNameLabel = new Label(ticketInfo.getMovie());
 				Label dateTimeLabel = new Label("Date: " + ticketInfo.getDate() + "; Time: " + ticketInfo.getDate());
 				Label cinemaHallLabel = new Label("Hall: " + ticketInfo.getHall());
 				Label rowSeatLabel = new Label("Row: " + ticketInfo.getRow() + "; Seat: " + ticketInfo.getSeat());
 				Label priceLabel = new Label("Price: " + ticketInfo.getPrice());
-				if (ticketInfo.isReserved()) {
+				if ( ticketInfo.isReserved() ) {
 					priceLabel.setValue(priceLabel.getValue()
 							+ "; Ticket reserved, please present it to the seller 30 minutes before the session.");
 				}

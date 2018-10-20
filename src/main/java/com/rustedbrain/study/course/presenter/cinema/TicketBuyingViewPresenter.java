@@ -100,7 +100,29 @@ public class TicketBuyingViewPresenter implements TicketsBuyingView.TicketBuyVie
 
 	@Override
 	public void buttonBuyClicked(String name, String surname, String value) {
-		view.showError("Can not buy tickets. This feature is not realized yet.");
-		// TODO create buying ticket
+		if ( name == null || name.isEmpty() ) {
+			view.showError("Please specify your name");
+		} else if ( surname == null || surname.isEmpty() ) {
+			view.showError("Please specify your surname");
+		} else {
+			try {
+				if ( authenticationService.isAuthenticated() ) {
+					List<TicketInfo> tickets = cinemaService.reserveTickets(name, surname,
+							authenticationService.getUserLogin(), filmScreeningEvent, seats);
+					logger.info("TicketInfo's successfully reserved: " + tickets);
+					new PageNavigator()
+							.navigateToTicketsLiqPay(tickets.stream().mapToLong(TicketInfo::getId).toArray());
+				} else {
+					List<TicketInfo> tickets = cinemaService.reserveTickets(name, surname, filmScreeningEvent, seats);
+					logger.info("TicketInfo's successfully reserved: " + tickets);
+					new PageNavigator()
+							.navigateToTicketsLiqPay(tickets.stream().mapToLong(TicketInfo::getId).toArray());
+				}
+			} catch (IllegalArgumentException ex) {
+				view.showError(ex.getMessage());
+			} catch (DataIntegrityViolationException ex) {
+				view.showError("Seems tickets already bought, please check your email");
+			}
+		}
 	}
 }

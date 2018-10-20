@@ -22,9 +22,6 @@ import com.vaadin.spring.annotation.UIScope;
 @SpringComponent
 public class TicketsInfoViewPresenter implements TicketsInfoView.TicketsInfoViewListener, Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1825173376730261455L;
 
 	public static final String TICKETS_ID_PARAM_KEY = "tickets";
