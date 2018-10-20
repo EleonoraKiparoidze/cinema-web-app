@@ -143,9 +143,7 @@ public class AdminMoviePanel extends Panel {
 	}
 
 	private class SaveDeleteForm extends FormLayout {
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 2626488464461743216L;
 		private Movie selectedMovie;
 		private TextField movieOriginalNameTextField;
@@ -207,8 +205,8 @@ public class AdminMoviePanel extends Panel {
 		}
 
 		private void deleteMovie(Movie selectedMovie) {
-			listeners.forEach(listener -> listener.getMovieEditPresenter()
-					.buttonDeleteMovieClicked(selectedMovie.getId()));
+			listeners.forEach(
+					listener -> listener.getMovieEditPresenter().buttonDeleteMovieClicked(selectedMovie.getId()));
 			this.setVisible(false);
 			movies.remove(selectedMovie);
 			grid.setItems(movies);

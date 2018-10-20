@@ -22,9 +22,6 @@ import com.vaadin.spring.annotation.UIScope;
 @SpringComponent
 public class CinemaHallViewPresenter implements CinemaHallView.CinemaHallViewListener, Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3731734121259034867L;
 	private static final Logger logger = Logger.getLogger(CinemaHallViewPresenter.class.getName());
 	private final CinemaService cinemaService;

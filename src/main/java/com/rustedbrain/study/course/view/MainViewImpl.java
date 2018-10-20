@@ -38,14 +38,14 @@ public class MainViewImpl extends VerticalLayout implements MainView {
 	}
 
 	private Panel getMenuViewPanel() {
-		if (menuPanel == null) {
+		if ( menuPanel == null ) {
 			menuPanel = new Panel();
 		}
 		return menuPanel;
 	}
 
 	private Panel getMainViewPanel() {
-		if (mainViewPanel == null) {
+		if ( mainViewPanel == null ) {
 			mainViewPanel = new Panel();
 		}
 		return mainViewPanel;
@@ -110,9 +110,6 @@ public class MainViewImpl extends VerticalLayout implements MainView {
 
 	private class CharacterCitiesPanel extends VerticalLayout {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = -3987481690619424904L;
 		private final Map<Character, List<City>> charCityMap;
 		private final Panel citiesAlphabetPanel = new Panel();
@@ -127,9 +124,9 @@ public class MainViewImpl extends VerticalLayout implements MainView {
 		}
 
 		private void setSelectedCharacter(Character character) {
-			Optional<Button> buttonOptional = characterButtons.stream()
-					.filter(button -> button.getCaption().charAt(0) == character).findAny();
-			if (buttonOptional.isPresent()) {
+			Optional<Button> buttonOptional =
+					characterButtons.stream().filter(button -> button.getCaption().charAt(0) == character).findAny();
+			if ( buttonOptional.isPresent() ) {
 				characterButtons.forEach(button -> button.setStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED));
 				buttonOptional.get().setStyleName(ValoTheme.BUTTON_FRIENDLY);
 			}
@@ -147,7 +144,7 @@ public class MainViewImpl extends VerticalLayout implements MainView {
 			Map<Character, List<City>> charCityMap = new TreeMap<>();
 			for (City city : cities) {
 				Character character = city.getName().charAt(0);
-				if (charCityMap.containsKey(character)) {
+				if ( charCityMap.containsKey(character) ) {
 					charCityMap.get(character).add(city);
 				} else {
 					charCityMap.put(character, new ArrayList<>(Collections.singletonList(city)));
