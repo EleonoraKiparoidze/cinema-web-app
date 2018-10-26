@@ -36,8 +36,9 @@ import com.vaadin.ui.themes.ValoTheme;
 public class CinemaHallConstructorViewImpl extends VerticalLayout implements CinemaHallConstructorView {
 	private static final long serialVersionUID = 1171962991490071522L;
 
+	private static final String SEAT_SIZE = "50px";
+	private static final String SEATS_LAYOUT_SIZE = "550px";
 	private CinemaHall cinemaHall;
-
 	private TabSheet tabSheet;
 	private Panel cinemaHallConstructorPanel;
 	private Panel componentMenuPanel;
@@ -91,15 +92,36 @@ public class CinemaHallConstructorViewImpl extends VerticalLayout implements Cin
 		Button saveCinemaHallSeatsButton = new Button("Save cinema hall");
 		saveCinemaHallSeatsButton
 				.addClickListener(clickEvent -> UI.getCurrent().addWindow(getSaveCinemaHallSeatsConformationWindow()));
-		Button addRowButton = new Button(VaadinIcons.ALIGN_JUSTIFY);
-		addRowButton.setCaption("Add seats");
+		Button addRowButton = new Button();
+		addRowButton.setCaption("Add/Edit row");
 		addRowButton.setWidth("160px");
-		addRowButton.addClickListener(clickEvent -> UI.getCurrent().addWindow(getAddNewSeatsWindow()));
-		componentMenuLayout.addComponentsAndExpand(addRowButton, saveCinemaHallSeatsButton);
+		addRowButton.addClickListener(clickEvent -> UI.getCurrent().addWindow(getAddNewRowWindow()));
+		Button deleteRowButton = new Button();
+		deleteRowButton.setCaption("Delete row");
+		deleteRowButton.setWidth(addRowButton.getWidth() + "px");
+		deleteRowButton.addClickListener(clickEvent -> UI.getCurrent().addWindow(getDeleteRowWindow()));
+		componentMenuLayout.addComponentsAndExpand(addRowButton, deleteRowButton, saveCinemaHallSeatsButton);
 		componentMenuPanel.setContent(componentMenuLayout);
 
 		content.addComponents(componentMenuPanel, cinemaHallConstructorPanel);
 		tabSheet.addTab(content, "Cinema hall constructor");
+	}
+
+	private Window getDeleteRowWindow() {
+		Window deleteRowsWindow = new Window("Delete row");
+		deleteRowsWindow.setModal(true);
+		deleteRowsWindow.setResizable(false);
+		deleteRowsWindow.setDraggable(false);
+		FormLayout content = new FormLayout();
+		TextField rowNumberTextField = new TextField("Row number");
+		content.addComponents(rowNumberTextField, new Button("Delete", (Button.ClickListener) event -> {
+			viewListeners.forEach(viewListener -> viewListener.deleteRowButtonClicked(cinemaHall.getId(),
+					rowNumberTextField.getValue()));
+		}));
+		content.setSizeUndefined();
+		content.setMargin(true);
+		deleteRowsWindow.setContent(content);
+		return deleteRowsWindow;
 	}
 
 	private Window getSaveCinemaHallSeatsConformationWindow() {
@@ -145,49 +167,56 @@ public class CinemaHallConstructorViewImpl extends VerticalLayout implements Cin
 		return componentMenuPanel;
 	}
 
-	private Window getAddNewSeatsWindow() {
-		Window addNewSeatsWindow = new Window("Add seats");
-		addNewSeatsWindow.setModal(true);
-		addNewSeatsWindow.setResizable(false);
-		addNewSeatsWindow.setDraggable(false);
+	private Window getAddNewRowWindow() {
+		Window addNewRowWindow = new Window("Add/Edit row");
+		addNewRowWindow.setModal(true);
+		addNewRowWindow.setResizable(false);
+		addNewRowWindow.setDraggable(false);
 
 		FormLayout content = new FormLayout();
-		TextField numberOfRowsTextField = new TextField("Row number");
+		TextField rowNumberTextField = new TextField("Row number");
 		TextField numberOfSeatsTextField = new TextField("Number of seats");
-		content.addComponent(numberOfRowsTextField);
-		content.addComponent(numberOfSeatsTextField);
+		TextField startCoordinateTextField = new TextField("Start coordinate");
+		content.addComponents(rowNumberTextField, numberOfSeatsTextField, startCoordinateTextField);
 		content.addComponent(new Button("Add", (Button.ClickListener) event -> {
-			viewListeners.forEach(viewListener -> viewListener.addSeatsButtonClicked(cinemaHall.getId(),
-					numberOfRowsTextField.getValue(), numberOfSeatsTextField.getValue()));
+			viewListeners.forEach(
+					viewListener -> viewListener.addRowButtonClicked(cinemaHall.getId(), rowNumberTextField.getValue(),
+							numberOfSeatsTextField.getValue(), startCoordinateTextField.getValue()));
 		}));
 		content.setSizeUndefined();
 		content.setMargin(true);
-		addNewSeatsWindow.setContent(content);
-		return addNewSeatsWindow;
+		addNewRowWindow.setContent(content);
+		return addNewRowWindow;
 	}
 
 	@Override
 	public void setCinemaHallSeatMap(Map<Integer, List<Integer>> cinemaHallSeatCoordinateMultiMap) {
-		final VerticalLayout hallLayout = new VerticalLayout();
-		final AbsoluteLayout seatsLayout = new AbsoluteLayout();
-		seatsLayout.setHeight("500px");
-		seatsLayout.setWidth("700px");
+		Panel hallPanel = new Panel();
+		hallPanel.setSizeUndefined();
+		AbsoluteLayout seatsLayout = new AbsoluteLayout();
+		seatsLayout.setHeight(SEATS_LAYOUT_SIZE);
+		seatsLayout.setWidth(SEATS_LAYOUT_SIZE);
 		cinemaHallSeatCoordinateMultiMap.entrySet().stream().forEach(enty -> {
 			int key = enty.getKey();
 			enty.getValue().forEach(value -> {
 				Button button = new Button(String.valueOf(value + 1));
-				button.setWidth("50px");
+				button.setWidth(SEAT_SIZE);
 				button.setDescription(
 						"<ul>" + "<li>Row: " + (key + 1) + "</li>" + "<li>Seat: " + (value + 1) + "</li>" + "</ul>",
 						ContentMode.HTML);
 				seatsLayout.addComponent(button, "top: " + 50 * key + "px;" + "left: " + 60 * value + "px;");
+				if ( 60 * value > seatsLayout.getWidth() ) {
+					seatsLayout.setWidth(seatsLayout.getWidth() + 130 + "px");
+				} else if ( 50 * key > seatsLayout.getHeight() ) {
+					seatsLayout.setHeight(seatsLayout.getHeight() + 130 + "px");
+				}
 			});
-
 		});
 		Button screen = new Button("Screen");
-		screen.setWidth("550px");
-		hallLayout.addComponents(screen, seatsLayout);
-		getCinemaHallConstructorPanel().setContent(hallLayout);
+		screen.setWidth("530px");
+
+		hallPanel.setContent(new VerticalLayout(screen, seatsLayout));
+		getCinemaHallConstructorPanel().setContent(hallPanel);
 	}
 
 	@Override

@@ -18,9 +18,11 @@ public interface CinemaHallConstructorView extends View {
 
 		void entered(ViewChangeEvent event);
 
-		void addSeatsButtonClicked(long cinameHallId, String row, String seats);
-
 		void buttonSaveCinemaHallSeatsButtonClicked();
+
+		void addRowButtonClicked(long cinameHallId, String row, String seats, String startCoordinate);
+
+		void deleteRowButtonClicked(long id, String rowNumber);
 	}
 
 	void addCinemaHallConstructorMenuComponents(CinemaHall cinemaHall);

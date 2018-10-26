@@ -20,9 +20,6 @@ import com.rustedbrain.study.course.model.persistence.DatabaseEntity;
 @Table(name = "cinemaHall")
 public class CinemaHall extends DatabaseEntity {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 5269490138494694336L;
 	@Column(name = "name", length = 64, nullable = false)
 	private String name;

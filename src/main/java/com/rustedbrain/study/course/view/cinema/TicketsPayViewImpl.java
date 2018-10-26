@@ -251,7 +251,7 @@ public class TicketsPayViewImpl extends VerticalLayout implements TicketsPayView
 
 		payPanel.setContent(cardInfo);
 		getTicketsInfoPanel().setContent(payPanel);
-//test
+
 		Map<String, Object> res;
 		try {
 			res = liqpay.api("payment/auth", params);
