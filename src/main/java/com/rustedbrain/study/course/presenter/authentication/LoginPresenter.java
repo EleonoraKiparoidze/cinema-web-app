@@ -1,14 +1,15 @@
 package com.rustedbrain.study.course.presenter.authentication;
 
+import java.security.AccessControlException;
+import java.util.logging.Logger;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.rustedbrain.study.course.service.AuthenticationService;
 import com.rustedbrain.study.course.view.authentication.LoginView;
 import com.rustedbrain.study.course.view.util.PageNavigator;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.security.AccessControlException;
-import java.util.logging.Logger;
 
 @UIScope
 @SpringComponent
@@ -26,7 +27,7 @@ public class LoginPresenter implements LoginView.LoginViewListener {
 	@Override
 	public void loginButtonClicked(String login, String password, boolean rememberMe) {
 		try {
-			if (authenticationService.login(login, password, rememberMe)) {
+			if ( authenticationService.login(login, password, rememberMe) ) {
 				logger.info("User with login \"" + login + "\" successfully logged in. Navigating to main view.");
 				new PageNavigator().navigateToMainView();
 			} else {
