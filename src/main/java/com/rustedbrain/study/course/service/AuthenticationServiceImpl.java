@@ -5,12 +5,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.Cookie;
 
@@ -94,11 +94,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Override
 	public List<User> getUsersByRoles(List<UserRole> roles) {
-		List<User> users = new ArrayList<>();
-		for (UserRole role : roles) {
-			users.addAll(authorizationUserService.getUserPropertiesAccessor(role).findAll());
-		}
-		return users;
+		return roles.stream().flatMap(
+				role -> ((List<User>) authorizationUserService.getUserPropertiesAccessor(role).findAll()).stream())
+				.collect(Collectors.toList());
 	}
 
 	@Override
